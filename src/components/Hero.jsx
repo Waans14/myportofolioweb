@@ -42,7 +42,7 @@ export default function Hero({ lang }) {
     >
       <motion.div
         ref={ref}
-        className="mt-12 bg-white/10 border border-white/20 backdrop-blur-sm shadow-md rounded-2xl p-10 w-full md:max-w-5xl text-center flex flex-col items-center"
+        className="mt-20 bg-white/10 border border-white/20 backdrop-blur-sm shadow-md rounded-2xl p-10 w-full md:max-w-5xl text-center flex flex-col items-center"
         initial={{ opacity: 0, y: 30 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 1 }}
@@ -55,7 +55,7 @@ export default function Hero({ lang }) {
         />
 
         {/* NAME */}
-        <h1 className="text-4xl font-bold text-white mb-2 h-[50px]">
+        <h1 className="text-4xl font-bold text-white mb-2 h-[50px] max-w-3xl w-full mx-auto">
           <Typewriter
             words={[name]}
             loop={1}
@@ -66,7 +66,7 @@ export default function Hero({ lang }) {
         </h1>
 
         {/* TITLE */}
-        <h2 className="text-xl text-indigo-200 mb-4 h-[30px]">
+        <h2 className="text-xl text-indigo-200 mb-4 h-[30px] max-w-2xl w-full mx-auto">
           <Typewriter
             words={titles}
             loop={true}
@@ -81,7 +81,7 @@ export default function Hero({ lang }) {
         {/* DESCRIPTION */}
         {showDescription && (
           <motion.p
-            className="text-white/90 mb-6 leading-relaxed max-w-2xl"
+            className="text-white/90 mb-6 leading-relaxed max-w-3xl w-full mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
