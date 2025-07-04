@@ -1,40 +1,74 @@
-import './index.css'
-import backgroundVideo from './assets/background.mp4'
-import profile from './assets/profile_bulat.png'
+import React, { useEffect, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import GlassConnector from "./components/GlassConnector";
+import SectionWrapper from "./components/SectionWrapper";
+import Navigation from "./components/Navigation";
+import Hero from "./components/Hero";
+import About from "./components/About";
+import Projects from "./components/Projects";
+import Sertifikasi from "./components/Sertifikasi";
+import Contact from "./components/Contact";
+import Squares from "./components/Squares";
 
-function App() {
+export default function App() {
+  const { scrollY } = useScroll();
+  const yAurora = useTransform(scrollY, [0, 500], [0, -100]);
+
+  const currentYear = new Date().getFullYear();
+  const [lang, setLang] = useState("id"); // Default: Indonesia
+
+  useEffect(() => {
+    const userLang = navigator.language || navigator.userLanguage;
+    if (userLang.toLowerCase().includes("en")) {
+      setLang("en");
+    }
+  }, []);
+
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background video */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute top-0 left-0 w-full h-full object-cover z-0"
-      >
-        <source src={backgroundVideo} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+    <div className="relative overflow-hidden min-h-screen flex flex-col">
+      {/* Background animation */}
+      <motion.div className="absolute inset-0 -z-10" style={{ y: yAurora }}>
+        <Squares
+          speed={0.3}
+          squareSize={40}
+          direction="diagonal"
+          borderColor="#222"
+          hoverFillColor="#222"
+        />
+      </motion.div>
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/60 z-0" />
+      {/* Navigation with language switch */}
+      <Navigation lang={lang} setLang={setLang} />
 
-      {/* Glassmorphism Content */}
-      <div className="relative z-10 text-center px-8">
-        <div className="bg-white/10 backdrop-blur-md border border-white/20 text-white p-10 rounded-2xl shadow-xl max-w-md mx-auto">
-          <img
-            src={profile}
-            alt="Profile"
-            className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-white/30 shadow-md"
-          />
-          <h1 className="text-3xl font-bold mb-2">Afwan Sutdrajat</h1>
-          <p className="text-white/80 mb-6">Website Portofolio Coming Soon</p>
-          <p className="text-sm text-white/60">Sedang Dalam Tahap Pengerjaan Hehe...</p>
-        </div>
-      </div>
+      {/* Main content */}
+      <main className="px-4 md:px-16 space-y-40 flex-grow">
+        <SectionWrapper>
+          <Hero lang={lang} />
+        </SectionWrapper>
+        <GlassConnector />
+        <SectionWrapper>
+          <About lang={lang} />
+        </SectionWrapper>
+        <GlassConnector />
+        <SectionWrapper>
+          <Projects lang={lang} />
+        </SectionWrapper>
+        <GlassConnector />
+        <SectionWrapper>
+          <Sertifikasi lang={lang} />
+        </SectionWrapper>
+        <GlassConnector />
+        <SectionWrapper>
+          <Contact lang={lang} />
+        </SectionWrapper>
+      </main>
+
+      {/* Footer */}
+      <footer className="text-center text-white/70 text-sm py-6 border-t border-white/10">
+        {lang === 'id'
+          ? `© ${currentYear} Afwan Sutdrajat. Semua hak cipta dilindungi.`
+          : `© ${currentYear} Afwan Sutdrajat. All rights reserved.`}
+      </footer>
     </div>
-  )
+  );
 }
-
-export default App
