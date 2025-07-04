@@ -1,5 +1,7 @@
 import React from 'react';
 import emailjs from 'emailjs-com';
+import { motion } from 'framer-motion';
+import { Typewriter } from 'react-simple-typewriter';
 import {
   FaYoutube,
   FaGithub,
@@ -20,7 +22,12 @@ export default function Contact({ lang }) {
         'zjuVAQbKojrXmTRMx'
       )
       .then(
-        () => alert(lang === 'id' ? 'Pesan berhasil dikirim!' : 'Message sent successfully!'),
+        () =>
+          alert(
+            lang === 'id'
+              ? 'Pesan berhasil dikirim!'
+              : 'Message sent successfully!'
+          ),
         (error) =>
           alert(
             (lang === 'id' ? 'Gagal mengirim pesan: ' : 'Failed to send message: ') +
@@ -31,13 +38,39 @@ export default function Contact({ lang }) {
     e.target.reset();
   };
 
+  // Fade-in animation variants
+  const fadeIn = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (i = 0) => ({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, delay: i * 0.2 },
+    }),
+  };
+
   return (
     <section id="contact" className="py-20 flex flex-col items-center px-4 gap-10">
       {/* Contact Form */}
-      <div className="w-full md:max-w-2xl bg-white/10 border border-white/20 backdrop-blur-md shadow-md rounded-2xl p-10">
-        <h2 className="text-3xl font-semibold text-white mb-6 text-center">
-          {lang === 'id' ? 'Hubungi Saya' : 'Contact Me'}
-        </h2>
+      <motion.div
+        className="w-full md:max-w-2xl bg-white/10 border border-white/20 backdrop-blur-md shadow-md rounded-2xl p-10"
+        variants={fadeIn}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+      >
+        <motion.h2
+          className="text-3xl font-semibold text-white mb-6 text-center h-[40px]"
+          variants={fadeIn}
+        >
+          <Typewriter
+            words={[lang === 'id' ? 'Hubungi Saya' : 'Contact Me']}
+            loop={1}
+            cursor
+            cursorStyle=""
+            typeSpeed={80}
+          />
+        </motion.h2>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
@@ -60,21 +93,39 @@ export default function Contact({ lang }) {
             required
             className="w-full px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none"
           />
-          <button
+          <motion.button
             type="submit"
             className="bg-indigo-500 px-6 py-2 rounded-lg text-white hover:bg-indigo-600 transition-all w-full"
+            variants={fadeIn}
+            custom={2}
           >
             {lang === 'id' ? 'Kirim' : 'Send'}
-          </button>
+          </motion.button>
         </form>
-      </div>
+      </motion.div>
 
-      {/* Social Media */}
-      <div className="w-full md:max-w-2xl bg-white/10 border border-white/20 backdrop-blur-md shadow-md rounded-2xl p-10 text-center">
-        <h3 className="text-2xl font-semibold text-white mb-6">
+      {/* Social Media Section */}
+      <motion.div
+        className="w-full md:max-w-2xl bg-white/10 border border-white/20 backdrop-blur-md shadow-md rounded-2xl p-10 text-center"
+        variants={fadeIn}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        custom={3}
+      >
+        <motion.h3
+          className="text-2xl font-semibold text-white mb-6"
+          variants={fadeIn}
+          custom={4}
+        >
           {lang === 'id' ? 'Terhubung dengan Saya' : 'Connect with Me'}
-        </h3>
-        <div className="flex justify-center gap-6 text-white text-2xl">
+        </motion.h3>
+
+        <motion.div
+          className="flex justify-center gap-6 text-white text-2xl"
+          variants={fadeIn}
+          custom={5}
+        >
           <a
             href="https://www.youtube.com/@millenialzdev"
             target="_blank"
@@ -120,8 +171,8 @@ export default function Contact({ lang }) {
           >
             <FaBriefcase />
           </a>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

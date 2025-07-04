@@ -11,11 +11,11 @@ export default function About({ lang }) {
     triggerOnce: true,
   });
 
-  const [showTyping, setShowTyping] = useState(false);
+  const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
     if (inView) {
-      const timer = setTimeout(() => setShowTyping(true), 500);
+      const timer = setTimeout(() => setShowContent(true), 500);
       return () => clearTimeout(timer);
     }
   }, [inView]);
@@ -32,6 +32,12 @@ export default function About({ lang }) {
       ? `Saya juga memiliki pengalaman langsung menggunakan Firebase, SQLite, MySQL, REST API, Laravel, React Js dan Tailwind. Selama perkuliahan, saya menyelesaikan magang di bidang IT support dan web development, serta meraih sertifikasi dari Bangkit by Google, Red Hat Academy, dan Dicoding. Saya adalah pembelajar cepat, kreatif, dan antusias dalam mengeksplorasi teknologi baru serta membangun solusi digital yang bermanfaat.`
       : `I also have hands-on experience with Firebase, SQLite, MySQL, REST APIs, Laravel, React Js and Tailwind. Throughout my academic journey, I completed internships in IT support and web development, and earned certifications from Bangkit by Google, Red Hat Academy, and Dicoding. I’m a fast learner, creative, and always excited to explore new technologies and build meaningful digital solutions.`;
 
+  // Framer Motion Variants
+  const fadeInVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 1 } },
+  };
+
   return (
     <section
       id="about"
@@ -40,48 +46,57 @@ export default function About({ lang }) {
       <motion.div
         ref={ref}
         className="bg-white/10 border border-white/20 backdrop-blur-sm shadow-md rounded-2xl p-10 w-full md:max-w-5xl text-center flex flex-col items-center"
-        initial={{ opacity: 0, y: 30 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 1 }}
+        initial="hidden"
+        animate={inView ? 'visible' : 'hidden'}
+        variants={{
+          visible: { transition: { staggerChildren: 0.3 } },
+          hidden: {},
+        }}
       >
         {/* Lottie Animation */}
-        <div className="w-40 h-40 mb-6">
+        <motion.div
+          className="w-40 h-40 mb-6"
+          variants={fadeInVariants}
+        >
           <DotLottieReact
             src="https://lottie.host/cf2ea38c-4cbb-42b0-9ecd-b892db932a02/9lKI5clbFe.lottie"
             loop
             autoplay
           />
-        </div>
+        </motion.div>
 
-        {/* Title */}
-        <h2 className="text-3xl font-bold text-white mb-6">{title}</h2>
+        {/* Title with typewriter */}
+        <motion.h2
+          className="text-3xl font-bold text-white mb-6 h-[40px]"
+          variants={fadeInVariants}
+        >
+          <Typewriter
+            words={[title]}
+            loop={1}
+            cursor
+            cursorStyle=""
+            typeSpeed={80}
+          />
+        </motion.h2>
 
-        {/* Descriptions with typewriter */}
+        {/* Paragraphs with fade-in */}
         <div className="max-w-3xl text-lg leading-relaxed text-white/90 text-justify space-y-6 min-h-[280px]">
-          {showTyping && (
+          {showContent && (
             <>
-              <p>
-                <Typewriter
-                  words={[paragraphOne]}
-                  loop={1}
-                  cursor
-                  cursorStyle=""
-                  typeSpeed={80}
-                  deleteSpeed={0}
-                  delaySpeed={500}
-                />
-              </p>
-              <p>
-                <Typewriter
-                  words={[paragraphTwo]}
-                  loop={1}
-                  cursor
-                  cursorStyle=""
-                  typeSpeed={80}
-                  deleteSpeed={0}
-                  delaySpeed={500}
-                />
-              </p>
+              <motion.p
+                variants={fadeInVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                {paragraphOne}
+              </motion.p>
+              <motion.p
+                variants={fadeInVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                {paragraphTwo}
+              </motion.p>
             </>
           )}
         </div>

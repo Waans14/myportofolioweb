@@ -35,6 +35,25 @@ export default function Hero({ lang }) {
   const downloadLabel = lang === "id" ? "Unduh CV" : "Download CV";
   const contactLabel = lang === "id" ? "Hubungi Saya" : "Contact Me";
 
+  // Framer Motion Variants
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.3,
+      },
+    },
+  };
+
+  const childVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8 },
+    },
+  };
+
   return (
     <section
       id="hero"
@@ -43,19 +62,23 @@ export default function Hero({ lang }) {
       <motion.div
         ref={ref}
         className="mt-20 bg-white/10 border border-white/20 backdrop-blur-sm shadow-md rounded-2xl p-10 w-full md:max-w-5xl text-center flex flex-col items-center"
-        initial={{ opacity: 0, y: 30 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 1 }}
+        variants={containerVariants}
+        initial="hidden"
+        animate={inView ? "visible" : "hidden"}
       >
         {/* IMAGE */}
-        <img
+        <motion.img
+          variants={childVariants}
           src={profile}
           alt={name}
           className="w-[250px] h-[280px] object-cover rounded-xl mb-6 shadow-md"
         />
 
         {/* NAME */}
-        <h1 className="text-4xl font-bold text-white mb-2 h-[50px] max-w-3xl w-full mx-auto">
+        <motion.h1
+          variants={childVariants}
+          className="text-4xl font-bold text-white mb-2 h-[50px] max-w-3xl w-full mx-auto"
+        >
           <Typewriter
             words={[name]}
             loop={1}
@@ -63,10 +86,13 @@ export default function Hero({ lang }) {
             cursorStyle=""
             typeSpeed={80}
           />
-        </h1>
+        </motion.h1>
 
         {/* TITLE */}
-        <h2 className="text-xl text-indigo-200 mb-4 h-[30px] max-w-2xl w-full mx-auto">
+        <motion.h2
+          variants={childVariants}
+          className="text-xl text-indigo-200 mt-6 mb-4 h-[30px] max-w-2xl w-full mx-auto"
+        >
           <Typewriter
             words={titles}
             loop={true}
@@ -76,7 +102,7 @@ export default function Hero({ lang }) {
             deleteSpeed={50}
             delaySpeed={1500}
           />
-        </h2>
+        </motion.h2>
 
         {/* DESCRIPTION */}
         {showDescription && (
@@ -86,27 +112,26 @@ export default function Hero({ lang }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
           >
-            <Typewriter
-              words={[description]}
-              loop={1}
-              cursor
-              cursorStyle=""
-              typeSpeed={50}
-            />
+            {description}
           </motion.p>
         )}
 
-        {/* Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <a
+        {/* BUTTONS */}
+        <motion.div
+          variants={childVariants}
+          className="flex flex-col sm:flex-row gap-4"
+        >
+          <motion.a
+            variants={childVariants}
             href="/Afwan_Sutdrajat_CV.pdf"
             download="Afwan_Sutdrajat_CV.pdf"
             className="flex items-center justify-center gap-2 px-6 py-3 rounded-full transition duration-300 text-white shadow-sm border border-white/20 backdrop-blur-sm bg-[#FE016F]/20 hover:bg-[#FE016F]/40"
           >
             <FaFilePdf className="text-xl" />
             {downloadLabel}
-          </a>
-          <a
+          </motion.a>
+          <motion.a
+            variants={childVariants}
             href="https://wa.me/6282145863515"
             target="_blank"
             rel="noopener noreferrer"
@@ -114,11 +139,11 @@ export default function Hero({ lang }) {
           >
             <FaWhatsapp className="text-xl" />
             {contactLabel}
-          </a>
-        </div>
+          </motion.a>
+        </motion.div>
       </motion.div>
 
-      {/* Scroll Down Icon */}
+      {/* SCROLL ICON */}
       <a
         href="#about"
         className="mt-10 animate-bounce text-white/60 hover:text-white transition"

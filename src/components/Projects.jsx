@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Typewriter } from 'react-simple-typewriter';
 import { FaChevronDown } from 'react-icons/fa';
 
 export default function Projects({ lang }) {
-  const [activeTab, setActiveTab] = useState('All');
+  const [activeTab, setActiveTab] = useState(lang === 'id' ? 'Semua' : 'All');
 
   // Tabs multilingual
   const projectTabs = [
@@ -71,18 +73,46 @@ export default function Projects({ lang }) {
       ? projects
       : projects.filter((project) => project.category === activeTab);
 
+  // Variants for motion
+  const fadeIn = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (i = 0) => ({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, delay: i * 0.1 },
+    }),
+  };
+
   return (
     <section id="projects" className="py-20 flex flex-col items-center px-4">
-      <div className="w-full md:max-w-6xl">
-        {/* Header */}
-        <h2 className="text-3xl font-semibold text-white mb-8 text-center">
-          {lang === 'id' ? 'Proyek' : 'Projects'}
-        </h2>
+      <motion.div
+        className="w-full md:max-w-6xl"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
+      >
+        {/* Header with Typewriter */}
+        <motion.h2
+          className="text-3xl font-semibold text-white mb-8 text-center h-[40px]"
+          variants={fadeIn}
+        >
+          <Typewriter
+            words={[lang === 'id' ? 'Proyek' : 'Projects']}
+            loop={1}
+            cursor
+            cursorStyle=""
+            typeSpeed={80}
+          />
+        </motion.h2>
 
-        {/* Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-10">
-          {projectTabs.map((tab) => (
-            <button
+        {/* Tabs with fade in */}
+        <motion.div
+          className="flex flex-wrap justify-center gap-4 mb-10"
+          variants={fadeIn}
+        >
+          {projectTabs.map((tab, index) => (
+            <motion.button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-5 py-2 rounded-full text-white text-sm border border-white/20 backdrop-blur-sm shadow-sm
@@ -91,21 +121,28 @@ export default function Projects({ lang }) {
                     ? 'bg-white/20 font-bold'
                     : 'bg-white/10 hover:bg-white/20 transition'
                 }`}
+              custom={index}
+              variants={fadeIn}
             >
               {tab}
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Cards */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredProjects.map((project, index) => (
-            <a
+            <motion.a
               key={index}
               href={project.link}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-white/10 border border-white/20 backdrop-blur-sm rounded-xl shadow-md overflow-hidden transition hover:scale-[1.02]"
+              custom={index}
+              variants={fadeIn}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
             >
               <img
                 src={project.image}
@@ -118,19 +155,23 @@ export default function Projects({ lang }) {
                   {project.description[lang] || project.description.en}
                 </p>
               </div>
-            </a>
+            </motion.a>
           ))}
         </div>
-      </div>
+      </motion.div>
 
-      {/* Scroll Down Icon */}
-      <a
+      {/* Scroll Down Icon with fade in */}
+      <motion.a
         href="#sertifikasi"
         className="mt-10 animate-bounce text-white/60 hover:text-white transition"
         aria-label="Scroll to Certifications"
+        variants={fadeIn}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
       >
         <FaChevronDown size={24} />
-      </a>
+      </motion.a>
     </section>
   );
 }

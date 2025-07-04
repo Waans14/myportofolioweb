@@ -1,4 +1,6 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+import { Typewriter } from 'react-simple-typewriter';
 import { FaChevronDown } from 'react-icons/fa';
 
 const certifications = [
@@ -31,18 +33,50 @@ const certifications = [
 ];
 
 export default function Sertifikasi({ lang }) {
+  // Motion fade-in variant
+  const fadeIn = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (i = 0) => ({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, delay: i * 0.2 },
+    }),
+  };
+
   return (
     <section id="sertifikasi" className="py-20 flex flex-col items-center px-4">
-      <div className="w-full md:max-w-4xl">
-        <h2 className="text-3xl font-semibold text-white text-center mb-10">
-          {lang === 'id' ? 'Sertifikasi' : 'Certifications'}
-        </h2>
+      <motion.div
+        className="w-full md:max-w-4xl"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
+      >
+        {/* Header with Typewriter */}
+        <motion.h2
+          className="text-3xl font-semibold text-white text-center mb-10 h-[40px]"
+          variants={fadeIn}
+        >
+          <Typewriter
+            words={[lang === 'id' ? 'Sertifikasi' : 'Certifications']}
+            loop={1}
+            cursor
+            cursorStyle=""
+            typeSpeed={80}
+          />
+        </motion.h2>
 
+        {/* Certificate Cards */}
         <div className="space-y-6">
           {certifications.map((cert, index) => (
-            <div
+            <motion.div
               key={index}
               className="flex items-center gap-4 bg-white/10 border border-white/20 backdrop-blur-md shadow-md rounded-xl p-4 hover:bg-white/20 transition"
+              custom={index}
+              variants={fadeIn}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
             >
               <img
                 src={cert.image}
@@ -59,19 +93,23 @@ export default function Sertifikasi({ lang }) {
                   {cert.name[lang]}
                 </a>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* Scroll Down Icon */}
-      <a
+      <motion.a
         href="#contact"
         className="mt-10 animate-bounce text-white/60 hover:text-white transition"
         aria-label="Scroll to Contact"
+        variants={fadeIn}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
       >
         <FaChevronDown size={24} />
-      </a>
+      </motion.a>
     </section>
   );
 }
