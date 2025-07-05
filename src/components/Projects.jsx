@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Typewriter } from 'react-simple-typewriter';
 import { FaChevronDown } from 'react-icons/fa';
+import webPortoImg from '../assets/web_porto.png';
+import webBioImg from '../assets/bio.png';
+import RickyMortyImg from '../assets/rickymortyapp.png';
+import PolindromImg from '../assets/polindrom.jpg';
+import KlasifikasiBeritaImg from '../assets/klasifikasiberita.png';
+import PasKitaImg from '../assets/paskita.png';
 
 export default function Projects({ lang }) {
   const [activeTab, setActiveTab] = useState(lang === 'id' ? 'Semua' : 'All');
@@ -17,54 +23,64 @@ export default function Projects({ lang }) {
 
   const projects = [
     {
-      title: 'Portfolio Website',
+      title: 'My Portfolio Website',
       description: {
-        en: 'Responsive site built with React and Tailwind.',
-        id: 'Situs responsif menggunakan React dan Tailwind.',
+        en: 'Responsive site built with React + Vite and Tailwind.',
+        id: 'Situs responsif menggunakan React + js dan Tailwind.',
       },
-      image: 'https://via.placeholder.com/400x200',
+      image: webPortoImg,
       category: 'Web',
-      link: 'https://your-web-link.com',
+      link: 'https://afwansutdrajat.vercel.app/',
     },
     {
-      title: 'Chat App',
+      title: 'Link In Bio Website',
       description: {
-        en: 'Real-time Android app with Firebase.',
-        id: 'Aplikasi Android real-time dengan Firebase.',
+        en: 'Responsive site built with React + Vite and Tailwind.',
+        id: 'Situs responsif menggunakan React + js dan Tailwind.',
       },
-      image: 'https://via.placeholder.com/400x200',
+      image: webBioImg,
+      category: 'Web',
+      link: 'https://afwansu.vercel.app/',
+    },
+    {
+      title: 'Ricky Morty Character App',
+      description: {
+        en: 'A real-time Android app that displays Rick and Morty characters using the Rick and Morty API',
+        id: 'Aplikasi Android real-time yang menampilkan karakter Rick and Morty menggunakan API Rick and Morty.',
+      },
+      image: RickyMortyImg,
       category: 'Android',
-      link: 'https://your-android-link.com',
+      link: 'https://github.com/Waans14/Rick-Morty-API',
     },
     {
-      title: 'Image Classifier',
+      title: 'Polindrom App',
       description: {
-        en: 'ML model to detect plant disease.',
-        id: 'Model ML untuk mendeteksi penyakit tanaman.',
+        en: 'A real-time Android app that displays Rick and Morty characters using the Rick and Morty API',
+        id: 'Aplikasi Android real-time yang menampilkan karakter Rick and Morty menggunakan API Rick and Morty.',
       },
-      image: 'https://via.placeholder.com/400x200',
+      image: PolindromImg,
+      category: 'Android',
+      link: 'https://github.com/Waans14/Mobile-Developer-Intern-2024-Suitmedia',
+    },
+    {
+      title: 'Klasifikasi Berita Palsu Menggunakan Random Forest',
+      description: {
+        en: 'Machine learning model using Random Forest to classify fake news based on text data.',
+        id: 'Model machine learning menggunakan Random Forest untuk mengklasifikasikan berita palsu berdasarkan data teks.',
+      },
+      image: KlasifikasiBeritaImg,
       category: 'ML',
-      link: 'https://your-ml-link.com',
+      link: 'https://colab.research.google.com/drive/1c9wtpKJFXFIuWmnYVtSBHkNQ-_DupLiH',
     },
     {
-      title: 'UI Concept',
+      title: 'PasKita Mobile App',
       description: {
-        en: 'Modern mobile UI prototype.',
-        id: 'Prototype UI mobile modern.',
+        en: 'Mobile UI/UX prototype for the Bangkit Capstone Project, designed with modern and user-friendly interface principles.',
+        id: 'Prototipe UI/UX aplikasi mobile untuk Proyek Capstone Bangkit, dirancang dengan prinsip antarmuka modern dan ramah pengguna.',
       },
-      image: 'https://via.placeholder.com/400x200',
+      image: PasKitaImg,
       category: 'UI/UX',
-      link: 'https://your-uiux-link.com',
-    },
-    {
-      title: 'Fastwork Profile',
-      description: {
-        en: 'Freelance projects for various clients.',
-        id: 'Proyek freelance untuk berbagai klien.',
-      },
-      image: 'https://via.placeholder.com/400x200',
-      category: 'Web',
-      link: 'https://fastwork.id/user/afwandev',
+      link: 'https://www.figma.com/design/NjzpdezBiHSDca0HsfaXgG/PasKita-Capstone-Project?node-id=0-1&t=wvJrhKPw4bo77Aiz-1',
     },
   ];
 

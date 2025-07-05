@@ -91,7 +91,7 @@ export default function Hero({ lang }) {
         {/* TITLE */}
         <motion.h2
           variants={childVariants}
-          className="text-xl text-indigo-200 mt-6 mb-4 h-[30px] max-w-2xl w-full mx-auto"
+          className="text-lg text-indigo-200 mt-6 mb-4 h-[30px] max-w-2xl w-full mx-auto"
         >
           <Typewriter
             words={titles}
