@@ -79,8 +79,8 @@ export default function About({ lang }) {
           />
         </motion.h2>
 
-        {/* Paragraphs with fade-in */}
-        <div className="max-w-3xl text-lg leading-relaxed text-white/90 text-justify space-y-6 min-h-[280px]">
+        {/* Paragraphs with fade-in and text-center */}
+        <div className="max-w-3xl text-lg leading-relaxed text-white/90 text-center space-y-6 min-h-[280px] mx-auto">
           {showContent && (
             <>
               <motion.p
