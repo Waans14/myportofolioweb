@@ -17,6 +17,7 @@ import PORAImg from '../assets/pora.png';
 import UWRImg from '../assets/uwr.png';
 import BanaMeterImg from '../assets/banameter.png';
 import InspirasiImg from '../assets/inspirasi.png';
+import IdefundImg from '../assets/idefund.png';
 
 export default function Projects({ lang }) {
   const [activeTab, setActiveTab] = useState(lang === 'id' ? 'Semua' : 'All');
@@ -44,16 +45,6 @@ export default function Projects({ lang }) {
       link: 'https://afwansutdrajat.vercel.app/',
     },
     {
-      title: 'Link In Bio Website',
-      description: {
-        en: 'Responsive site built with React + Vite and Tailwind.',
-        id: 'Situs responsif menggunakan React + js dan Tailwind.',
-      },
-      image: webBioImg,
-      category: 'Web',
-      link: 'https://afwansu.vercel.app/',
-    },
-    {
       title: 'InSPIRASI Company Profile Website',
       description: {
         en: 'Responsive Company Profile site built with Laravel and Tailwind.',
@@ -62,6 +53,26 @@ export default function Projects({ lang }) {
       image: InspirasiImg,
       category: 'Web',
       link: 'https://github.com/PKBI-NTB/Inspirasi',
+    },
+    {
+      title: 'Ideafund',
+      description: {
+        en: 'Ideafund is a platform connecting UMKM business idea owners with investors. The site is built using React and Tailwind for the frontend & MySQL for the database.',
+        id: 'Ideafund adalah platform yang menghubungkan pemilik ide usaha UMKM dengan investor. Situs dibuat menggunakan React dan Tailwind untuk frontend & Mysql Untuk Database.',
+      },
+      image: IdefundImg,
+      category: 'Web',
+      link: 'https://ideafund-beta.vercel.app/',
+    },
+    {
+      title: 'Link In Bio Website',
+      description: {
+        en: 'Responsive site built with React + Vite and Tailwind.',
+        id: 'Situs responsif menggunakan React + js dan Tailwind.',
+      },
+      image: webBioImg,
+      category: 'Web',
+      link: 'https://afwansu.vercel.app/',
     },
 
     // Android Projects
