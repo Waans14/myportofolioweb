@@ -22,7 +22,7 @@ export default function Projects({ lang }) {
       const { data, error } = await supabase
         .from('projects')
         .select('*')
-        .order('updated_at', { ascending: false });
+        .order('updated_at', { ascending: true });
 
       if (error) {
         console.error('Gagal mengambil data:', error.message);
