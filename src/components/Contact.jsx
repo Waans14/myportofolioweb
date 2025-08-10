@@ -127,7 +127,7 @@ export default function Contact({ lang }) {
           custom={5}
         >
           <a
-            href="https://www.youtube.com/@millenialzdev"
+            href="https://www.youtube.com/@afwansu"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-red-500 transition"

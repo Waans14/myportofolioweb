@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { FaWhatsapp, FaFilePdf, FaChevronDown } from "react-icons/fa";
+import {
+  FaWhatsapp,
+  FaFilePdf,
+  FaChevronDown,
+  FaYoutube,
+  FaBriefcase,
+} from "react-icons/fa";
 import { Typewriter } from "react-simple-typewriter";
 import profile from "../assets/profile.png";
 
@@ -24,16 +30,20 @@ export default function Hero({ lang }) {
 
   const name = "Afwan Sutdrajat";
 
-  const titles = lang === "id"
-    ? ["Android & Web Development", "Content Creator", "Freelancer"]
-    : ["Android & Web Development", "Content Creator", "Freelancer"];
+  const titles =
+    lang === "id"
+      ? ["Android & Web Development", "Content Creator", "Freelancer"]
+      : ["Android & Web Development", "Content Creator", "Freelancer"];
 
-  const description = lang === "id"
-    ? "Sejak tahun 2022, saya bekerja sebagai pengembang Android freelance menggunakan Java dan Kotlin. Ketertarikan saya terhadap pengalaman pengguna yang baik juga mendorong saya untuk berkembang di bidang web development."
-    : "Since 2022, I’ve been working as a freelance Android developer using Java and Kotlin. My passion for building great user experiences has also driven me to explore and grow in web development.";
+  const description =
+    lang === "id"
+      ? "Sejak tahun 2022, saya bekerja sebagai pengembang Android freelance menggunakan Java dan Kotlin. Ketertarikan saya terhadap pengalaman pengguna yang baik juga mendorong saya untuk berkembang di bidang web development."
+      : "Since 2022, I’ve been working as a freelance Android developer using Java and Kotlin. My passion for building great user experiences has also driven me to explore and grow in web development.";
 
   const downloadLabel = lang === "id" ? "Unduh CV" : "Download CV";
   const contactLabel = lang === "id" ? "Hubungi Saya" : "Contact Me";
+  const youtubeLabel = lang === "id" ? "Channel Saya" : "My Channel";
+  const fastworkLabel = "Fastwork.id";
 
   // Framer Motion Variants
   const containerVariants = {
@@ -119,8 +129,9 @@ export default function Hero({ lang }) {
         {/* BUTTONS */}
         <motion.div
           variants={childVariants}
-          className="flex flex-col sm:flex-row gap-4"
+          className="flex flex-col sm:flex-row gap-4 flex-wrap justify-center"
         >
+          {/* CV */}
           <motion.a
             variants={childVariants}
             href="/Afwan_Sutdrajat_CV.pdf"
@@ -130,6 +141,8 @@ export default function Hero({ lang }) {
             <FaFilePdf className="text-xl" />
             {downloadLabel}
           </motion.a>
+
+          {/* WhatsApp */}
           <motion.a
             variants={childVariants}
             href="https://wa.me/6282145863515"
@@ -139,6 +152,30 @@ export default function Hero({ lang }) {
           >
             <FaWhatsapp className="text-xl" />
             {contactLabel}
+          </motion.a>
+
+          {/* YouTube */}
+          <motion.a
+            variants={childVariants}
+            href="https://www.youtube.com/@afwansu"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 px-6 py-3 rounded-full transition duration-300 text-white shadow-sm border border-white/20 backdrop-blur-sm bg-[#FF0000]/20 hover:bg-[#FF0000]/40"
+          >
+            <FaYoutube className="text-xl" />
+            {youtubeLabel}
+          </motion.a>
+
+          {/* Fastwork */}
+          <motion.a
+            variants={childVariants}
+            href="https://fastwork.id/user/waans14"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 px-6 py-3 rounded-full transition duration-300 text-white shadow-sm border border-white/20 backdrop-blur-sm bg-[#1DA1F2]/20 hover:bg-[#1DA1F2]/40"
+          >
+            <FaBriefcase className="text-xl" />
+            {fastworkLabel}
           </motion.a>
         </motion.div>
       </motion.div>
