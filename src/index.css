@@ -13,3 +13,13 @@ body {
   min-height: 100vh;
   margin: 0;
 }
+
+/* Global cursor pointer for interactive elements */
+button,
+a,
+[role="button"],
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  cursor: pointer;
+}

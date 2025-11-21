@@ -1,58 +1,165 @@
-// src/auth/Login.jsx
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import styled from 'styled-components';
 import { supabase } from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setErrorMsg("");
+
     const { error } = await supabase.auth.signInWithPassword({ email, password });
+
     if (error) {
       setErrorMsg("Login gagal. Periksa email dan password.");
+      setLoading(false);
     } else {
       navigate("/admin");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] flex items-center justify-center">
-      <div className="backdrop-blur-md bg-white/10 border border-white/20 shadow-xl rounded-xl px-8 py-10 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-white text-center mb-6">Login Admin</h2>
-
-        <form onSubmit={handleLogin} className="space-y-4">
-          {errorMsg && <p className="text-red-500 text-sm text-center">{errorMsg}</p>}
-
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full bg-white/10 placeholder-white/80 text-white border border-white/30 px-4 py-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full bg-white/10 placeholder-white/80 text-white border border-white/30 px-4 py-2 rounded focus:outline-none focus:ring focus:ring-blue-500"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded transition"
-          >
-            Login
-          </button>
-        </form>
+    <StyledWrapper>
+      <div className="wrapper">
+        <div className="card-switch">
+          <div className="flip-card__inner">
+            <div className="flip-card__front">
+              <div className="title">Log in</div>
+              <form className="flip-card__form" onSubmit={handleLogin}>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  name="email"
+                  className="flip-card__input"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                  className="flip-card__input"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <button className="flip-card__btn" disabled={loading}>
+                  {loading ? "Loading..." : "Let`s go!"}
+                </button>
+                {errorMsg && <p style={{ color: 'red', fontSize: '12px' }}>{errorMsg}</p>}
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </StyledWrapper>
   );
 }
+
+const StyledWrapper = styled.div`
+  .wrapper {
+    --input-focus: #2d8cf0;
+    --font-color: #fefefe;
+    --font-color-sub: #7e7e7e;
+    --bg-color: #111;
+    --bg-color-alt: #7e7e7e;
+    --main-color: #fefefe;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  /* card */
+  .flip-card__inner {
+    width: 300px;
+    height: 350px;
+    position: relative;
+    background-color: transparent;
+    text-align: center;
+    transform-style: preserve-3d;
+  }
+
+  .flip-card__front {
+    padding: 20px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    background: var(--bg-color);
+    gap: 20px;
+    border-radius: 5px;
+    border: 2px solid var(--main-color);
+    box-shadow: 4px 4px var(--main-color);
+    width: 100%;
+    height: 100%;
+  }
+
+  .flip-card__form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .title {
+    margin: 20px 0 20px 0;
+    font-size: 25px;
+    font-weight: 900;
+    text-align: center;
+    color: var(--main-color);
+  }
+
+  .flip-card__input {
+    width: 250px;
+    height: 40px;
+    border-radius: 5px;
+    border: 2px solid var(--main-color);
+    background-color: var(--bg-color);
+    box-shadow: 4px 4px var(--main-color);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--font-color);
+    padding: 5px 10px;
+    outline: none;
+  }
+
+  .flip-card__input::placeholder {
+    color: var(--font-color-sub);
+    opacity: 0.8;
+  }
+
+  .flip-card__input:focus {
+    border: 2px solid var(--input-focus);
+  }
+
+  .flip-card__btn:active {
+    box-shadow: 0px 0px var(--main-color);
+    transform: translate(3px, 3px);
+  }
+
+  .flip-card__btn {
+    margin: 20px 0 20px 0;
+    width: 120px;
+    height: 40px;
+    border-radius: 5px;
+    border: 2px solid var(--main-color);
+    background-color: var(--bg-color);
+    box-shadow: 4px 4px var(--main-color);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--font-color);
+    cursor: pointer;
+  }`;
+
+export default Login;
