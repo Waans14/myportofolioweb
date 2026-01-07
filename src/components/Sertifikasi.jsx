@@ -9,6 +9,7 @@ import { supabase } from '../supabaseClient';
 export default function Sertifikasi({ lang }) {
   const [certifications, setCertifications] = React.useState([]);
   const [activeTab, setActiveTab] = React.useState('All');
+  const [loading, setLoading] = React.useState(true);
   const [currentPage, setCurrentPage] = React.useState(1);
   const itemsPerPage = 10;
 
@@ -19,6 +20,7 @@ export default function Sertifikasi({ lang }) {
   const fetchCertifications = async () => {
     const { data, error } = await supabase.from('sertifikasi').select('*').order('created_at', { ascending: false });
     if (!error) setCertifications(data);
+    setLoading(false);
   };
 
   const handleTabChange = (tab) => {
@@ -51,17 +53,14 @@ export default function Sertifikasi({ lang }) {
 
   return (
     <section id="sertifikasi" className="py-20 flex flex-col items-center px-4">
-      <motion.div
-        className="w-full md:max-w-4xl"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
-      >
+      <div className="w-full md:max-w-4xl">
         {/* Header with Typewriter */}
         <motion.h2
           className="text-3xl font-semibold text-white text-center mb-10 h-[40px]"
           variants={fadeIn}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
         >
           <Typewriter
             words={[lang === 'id' ? 'Sertifikasi' : 'Certifications']}
@@ -73,7 +72,13 @@ export default function Sertifikasi({ lang }) {
         </motion.h2>
 
         {/* Category Tabs */}
-        <div className="flex justify-center gap-4 mb-10">
+        <motion.div
+          className="flex justify-center gap-4 mb-10"
+          variants={fadeIn}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           {['All', 'Android', 'Web'].map((tab) => (
             <button
               key={tab}
@@ -86,42 +91,63 @@ export default function Sertifikasi({ lang }) {
               {tab === 'All' ? (lang === 'id' ? 'Semua' : 'All') : tab}
             </button>
           ))}
-        </div>
+        </motion.div>
 
         {/* Certificate Cards */}
-        <div className="space-y-6">
-          {currentItems.map((cert, index) => (
+        {loading ? (
+          <motion.div
+            className="flex justify-center items-center h-40"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
             <motion.div
-              key={index}
-              className="flex items-center gap-4 bg-white/10 border border-white/20 backdrop-blur-md shadow-md rounded-xl p-4 hover:bg-white/20 transition"
-              custom={index}
-              variants={fadeIn}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
-              <img
-                src={cert.image_url}
-                alt={lang === 'id' ? cert.name_id : cert.name_en}
-                className="w-16 h-16 object-contain rounded-md bg-white/10 p-1"
-              />
-              <div className="text-left">
-                <span className="text-xs font-semibold text-blue-300 bg-blue-500/10 px-2 py-1 rounded mb-1 inline-block">
-                  {cert.kategori}
-                </span>
-                <br />
-                <a
-                  href={cert.certificate_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-lg text-white hover:text-blue-400 transition font-medium"
-                >
-                  {lang === 'id' ? cert.name_id : cert.name_en}
-                </a>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              className="w-8 h-8 border-4 border-t-transparent border-white rounded-full animate-spin"
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 1 }}
+            />
+            <span className="ml-4 text-white/70 text-sm">
+              {lang === 'id' ? 'Memuat sertifikasi...' : 'Loading certifications...'}
+            </span>
+          </motion.div>
+        ) : currentItems.length === 0 ? (
+          <div className="text-center text-white/60 py-10">
+            {lang === 'id' ? 'Belum ada sertifikat.' : 'No certificates found.'}
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {currentItems.map((cert, index) => (
+              <motion.div
+                key={index}
+                className="flex items-center gap-4 bg-white/10 border border-white/20 backdrop-blur-md shadow-md rounded-xl p-4 hover:bg-white/20 transition"
+                custom={index}
+                variants={fadeIn}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+              >
+                <img
+                  src={cert.image_url}
+                  alt={lang === 'id' ? cert.name_id : cert.name_en}
+                  className="w-16 h-16 object-contain rounded-md bg-white/10 p-1"
+                />
+                <div className="text-left">
+                  <span className="text-xs font-semibold text-blue-300 bg-blue-500/10 px-2 py-1 rounded mb-1 inline-block">
+                    {cert.kategori}
+                  </span>
+                  <br />
+                  <a
+                    href={cert.certificate_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-lg text-white hover:text-blue-400 transition font-medium"
+                  >
+                    {lang === 'id' ? cert.name_id : cert.name_en}
+                  </a>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
 
         {/* Pagination Controls */}
         {totalPages > 1 && (
@@ -154,7 +180,7 @@ export default function Sertifikasi({ lang }) {
             </button>
           </div>
         )}
-      </motion.div>
+      </div>
 
       {/* Scroll Down Icon */}
       <motion.a

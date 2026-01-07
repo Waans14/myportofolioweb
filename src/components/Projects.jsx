@@ -65,16 +65,13 @@ export default function Projects({ lang }) {
 
   return (
     <section id="projects" className="py-20 flex flex-col items-center px-4">
-      <motion.div
-        className="w-full md:max-w-6xl"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
-      >
+      <div className="w-full md:max-w-6xl">
         <motion.h2
           className="text-3xl font-semibold text-white mb-8 text-center h-[40px]"
           variants={fadeIn}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
         >
           <Typewriter
             words={[lang === 'id' ? 'Proyek' : 'Projects']}
@@ -88,6 +85,9 @@ export default function Projects({ lang }) {
         <motion.div
           className="flex flex-wrap justify-center gap-4 mb-10"
           variants={fadeIn}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
         >
           {projectTabs.map((tab, index) => (
             <motion.button
@@ -122,6 +122,10 @@ export default function Projects({ lang }) {
               {lang === 'id' ? 'Memuat project...' : 'Loading projects...'}
             </span>
           </motion.div>
+        ) : currentProjects.length === 0 ? (
+          <div className="text-center text-white/60 py-10">
+            {lang === 'id' ? 'Belum ada proyek.' : 'No projects found.'}
+          </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {currentProjects.map((project, index) => (
@@ -189,7 +193,7 @@ export default function Projects({ lang }) {
             </button>
           </div>
         )}
-      </motion.div>
+      </div>
 
       <motion.a
         href="#sertifikasi"
