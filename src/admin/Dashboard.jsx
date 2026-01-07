@@ -8,6 +8,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const [form, setForm] = useState({
     title: "",
     description_en: "",
@@ -133,6 +135,18 @@ export default function Dashboard() {
     p.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentProjects = filteredProjects.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Reset page when searching
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   // Stats
   const totalProjects = projects.length;
   const categories = [...new Set(projects.map(p => p.category))].length;
@@ -205,7 +219,7 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProjects.map((project) => (
+            {currentProjects.map((project) => (
               <div key={project.id} className="group bg-[#1e293b] rounded-xl border border-white/10 overflow-hidden hover:border-blue-500/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <div className="relative aspect-video overflow-hidden">
                   <img
@@ -253,129 +267,164 @@ export default function Dashboard() {
             ))}
           </div>
         )}
+
+
+        {/* Pagination Controls */}
+        {!loading && filteredProjects.length > itemsPerPage && (
+          <div className="flex justify-center mt-8 gap-2 pb-8">
+            <button
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 rounded-lg bg-[#1e293b] text-white hover:bg-[#334155] disabled:opacity-50 disabled:cursor-not-allowed transition border border-white/10"
+            >
+              Prev
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => paginate(i + 1)}
+                className={`w-10 h-10 rounded-lg font-medium transition border border-white/10 ${currentPage === i + 1
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-[#1e293b] text-white hover:bg-[#334155]'
+                  }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 rounded-lg bg-[#1e293b] text-white hover:bg-[#334155] disabled:opacity-50 disabled:cursor-not-allowed transition border border-white/10"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </main>
 
       {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-[#1e293b] w-full max-w-2xl rounded-2xl border border-white/10 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center p-6 border-b border-white/10 sticky top-0 bg-[#1e293b] z-10">
-              <h2 className="text-xl font-bold text-white">
-                {editId ? "Edit Project" : "Add New Project"}
-              </h2>
-              <button onClick={closeModal} className="text-slate-400 hover:text-white">
-                <X size={24} />
-              </button>
-            </div>
+      {
+        showModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+            <div className="bg-[#1e293b] w-full max-w-2xl rounded-2xl border border-white/10 shadow-2xl max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center p-6 border-b border-white/10 sticky top-0 bg-[#1e293b] z-10">
+                <h2 className="text-xl font-bold text-white">
+                  {editId ? "Edit Project" : "Add New Project"}
+                </h2>
+                <button onClick={closeModal} className="text-slate-400 hover:text-white">
+                  <X size={24} />
+                </button>
+              </div>
 
-            <form onSubmit={handleSubmit} className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-1">Title</label>
-                    <input
-                      name="title"
-                      value={form.title}
-                      onChange={handleChange}
-                      className="w-full bg-[#0f172a] text-white border border-white/10 rounded-lg px-4 py-2.5 focus:border-blue-500 focus:outline-none"
-                      required
-                    />
+              <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-400 mb-1">Title</label>
+                      <input
+                        name="title"
+                        value={form.title}
+                        onChange={handleChange}
+                        className="w-full bg-[#0f172a] text-white border border-white/10 rounded-lg px-4 py-2.5 focus:border-blue-500 focus:outline-none"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-slate-400 mb-1">Category</label>
+                      <select
+                        name="category"
+                        value={form.category}
+                        onChange={handleChange}
+                        className="w-full bg-[#0f172a] text-white border border-white/10 rounded-lg px-4 py-2.5 focus:border-blue-500 focus:outline-none"
+                      >
+                        <option value="Web">Web</option>
+                        <option value="Android">Android</option>
+                        <option value="ML">ML</option>
+                        <option value="UI/UX">UI/UX</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-slate-400 mb-1">Project Link</label>
+                      <input
+                        name="link"
+                        value={form.link}
+                        onChange={handleChange}
+                        className="w-full bg-[#0f172a] text-white border border-white/10 rounded-lg px-4 py-2.5 focus:border-blue-500 focus:outline-none"
+                        required
+                      />
+                    </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-1">Category</label>
-                    <select
-                      name="category"
-                      value={form.category}
-                      onChange={handleChange}
-                      className="w-full bg-[#0f172a] text-white border border-white/10 rounded-lg px-4 py-2.5 focus:border-blue-500 focus:outline-none"
-                    >
-                      <option value="Web">Web</option>
-                      <option value="Android">Android</option>
-                      <option value="ML">ML</option>
-                      <option value="UI/UX">UI/UX</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-1">Project Link</label>
-                    <input
-                      name="link"
-                      value={form.link}
-                      onChange={handleChange}
-                      className="w-full bg-[#0f172a] text-white border border-white/10 rounded-lg px-4 py-2.5 focus:border-blue-500 focus:outline-none"
-                      required
-                    />
+                    <label className="block text-sm font-medium text-slate-400 mb-1">Project Image</label>
+                    <div className="relative w-full aspect-video bg-[#0f172a] border-2 border-dashed border-white/10 rounded-lg overflow-hidden group hover:border-blue-500/50 transition-colors">
+                      {imagePreview ? (
+                        <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="flex flex-col items-center justify-center h-full text-slate-500">
+                          <ImageIcon size={32} className="mb-2" />
+                          <span className="text-sm">Click to upload</span>
+                        </div>
+                      )}
+                      <input
+                        type="file"
+                        name="image"
+                        accept="image/*"
+                        onChange={handleChange}
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                        required={!editId}
+                      />
+                    </div>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-1">Project Image</label>
-                  <div className="relative w-full aspect-video bg-[#0f172a] border-2 border-dashed border-white/10 rounded-lg overflow-hidden group hover:border-blue-500/50 transition-colors">
-                    {imagePreview ? (
-                      <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="flex flex-col items-center justify-center h-full text-slate-500">
-                        <ImageIcon size={32} className="mb-2" />
-                        <span className="text-sm">Click to upload</span>
-                      </div>
-                    )}
-                    <input
-                      type="file"
-                      name="image"
-                      accept="image/*"
-                      onChange={handleChange}
-                      className="absolute inset-0 opacity-0 cursor-pointer"
-                      required={!editId}
-                    />
-                  </div>
+                  <label className="block text-sm font-medium text-slate-400 mb-1">Description (English)</label>
+                  <textarea
+                    name="description_en"
+                    value={form.description_en}
+                    onChange={handleChange}
+                    rows={3}
+                    className="w-full bg-[#0f172a] text-white border border-white/10 rounded-lg px-4 py-2.5 focus:border-blue-500 focus:outline-none"
+                    required
+                  />
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-400 mb-1">Description (English)</label>
-                <textarea
-                  name="description_en"
-                  value={form.description_en}
-                  onChange={handleChange}
-                  rows={3}
-                  className="w-full bg-[#0f172a] text-white border border-white/10 rounded-lg px-4 py-2.5 focus:border-blue-500 focus:outline-none"
-                  required
-                />
-              </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-400 mb-1">Description (Indonesian)</label>
+                  <textarea
+                    name="description_id"
+                    value={form.description_id}
+                    onChange={handleChange}
+                    rows={3}
+                    className="w-full bg-[#0f172a] text-white border border-white/10 rounded-lg px-4 py-2.5 focus:border-blue-500 focus:outline-none"
+                    required
+                  />
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-400 mb-1">Description (Indonesian)</label>
-                <textarea
-                  name="description_id"
-                  value={form.description_id}
-                  onChange={handleChange}
-                  rows={3}
-                  className="w-full bg-[#0f172a] text-white border border-white/10 rounded-lg px-4 py-2.5 focus:border-blue-500 focus:outline-none"
-                  required
-                />
-              </div>
-
-              <div className="pt-4 border-t border-white/10 flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="px-6 py-2.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-lg shadow-blue-600/20"
-                >
-                  {editId ? "Update Project" : "Save Project"}
-                </button>
-              </div>
-            </form>
+                <div className="pt-4 border-t border-white/10 flex justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={closeModal}
+                    className="px-6 py-2.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-lg shadow-blue-600/20"
+                  >
+                    {editId ? "Update Project" : "Save Project"}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )
+      }
+    </div >
   );
 }
 

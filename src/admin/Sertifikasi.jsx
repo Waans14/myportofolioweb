@@ -8,11 +8,14 @@ export default function Sertifikasi() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const [form, setForm] = useState({
     name_en: "",
     name_id: "",
-    image: "",
-    link: "",
+    image_url: "",
+    certificate_link: "",
+    kategori: "",
   });
   const [editId, setEditId] = useState(null);
 
@@ -22,7 +25,7 @@ export default function Sertifikasi() {
 
   const fetchCertificates = async () => {
     setLoading(true);
-    const { data, error } = await supabase.from("sertifikasi").select("*");
+    const { data, error } = await supabase.from("sertifikasi").select("*").order("created_at", { ascending: false });
     if (!error) setCertificates(data);
     setLoading(false);
   };
@@ -34,10 +37,11 @@ export default function Sertifikasi() {
   const handleEdit = (cert) => {
     setEditId(cert.id);
     setForm({
-      name_en: cert.name?.en || "",
-      name_id: cert.name?.id || "",
-      image: cert.image,
-      link: cert.link,
+      name_en: cert.name_en || "",
+      name_id: cert.name_id || "",
+      image_url: cert.image_url || "",
+      certificate_link: cert.certificate_link || "",
+      kategori: cert.kategori || "",
     });
     setShowModal(true);
   };
@@ -51,12 +55,11 @@ export default function Sertifikasi() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const dataToSave = {
-      name: {
-        en: form.name_en,
-        id: form.name_id,
-      },
-      image: form.image,
-      link: form.link,
+      name_en: form.name_en,
+      name_id: form.name_id,
+      image_url: form.image_url,
+      certificate_link: form.certificate_link,
+      kategori: form.kategori,
     };
 
     if (editId) {
@@ -72,13 +75,26 @@ export default function Sertifikasi() {
   const closeModal = () => {
     setShowModal(false);
     setEditId(null);
-    setForm({ name_en: "", name_id: "", image: "", link: "" });
+    setForm({ name_en: "", name_id: "", image_url: "", certificate_link: "", kategori: "" });
   };
 
-  const filteredCertificates = certificates.filter(c =>
-    (c.name?.id || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (c.name?.en || "").toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredItems = certificates.filter(c =>
+    (c.name_id || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (c.name_en || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (c.kategori || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Reset page when searching
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   return (
     <div className="min-h-screen flex bg-[#0f172a]">
@@ -128,29 +144,32 @@ export default function Sertifikasi() {
           <div className="flex justify-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
           </div>
-        ) : filteredCertificates.length === 0 ? (
+        ) : filteredItems.length === 0 ? (
           <div className="text-center py-20 text-slate-400">
             <p>No certificates found matching your search.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCertificates.map((cert) => (
+            {currentItems.map((cert) => (
               <div key={cert.id} className="group bg-[#1e293b] rounded-xl border border-white/10 overflow-hidden hover:border-blue-500/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <div className="relative aspect-[4/3] overflow-hidden bg-white/5 p-4 flex items-center justify-center">
                   <img
-                    src={cert.image}
-                    alt={cert.name?.en}
+                    src={cert.image_url}
+                    alt={cert.name_en}
                     className="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
 
                 <div className="p-5">
-                  <h3 className="text-lg font-bold text-white mb-1 line-clamp-1">{cert.name?.id}</h3>
-                  <p className="text-slate-400 text-sm line-clamp-1 mb-4">{cert.name?.en}</p>
+                  <span className="inline-block px-2 py-1 text-xs font-semibold text-blue-200 bg-blue-500/20 rounded-md mb-2">
+                    {cert.kategori}
+                  </span>
+                  <h3 className="text-lg font-bold text-white mb-1 line-clamp-1">{cert.name_id}</h3>
+                  <p className="text-slate-400 text-sm line-clamp-1 mb-4">{cert.name_en}</p>
 
                   <div className="flex items-center justify-between pt-4 border-t border-white/10">
                     <a
-                      href={cert.link}
+                      href={cert.certificate_link}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 text-blue-400 hover:text-blue-300 text-sm font-medium"
@@ -176,6 +195,38 @@ export default function Sertifikasi() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Pagination Controls */}
+        {!loading && filteredItems.length > itemsPerPage && (
+          <div className="flex justify-center mt-8 gap-2">
+            <button
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 rounded-lg bg-[#1e293b] text-white hover:bg-[#334155] disabled:opacity-50 disabled:cursor-not-allowed transition border border-white/10"
+            >
+              Prev
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => paginate(i + 1)}
+                className={`w-10 h-10 rounded-lg font-medium transition border border-white/10 ${currentPage === i + 1
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-[#1e293b] text-white hover:bg-[#334155]'
+                  }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 rounded-lg bg-[#1e293b] text-white hover:bg-[#334155] disabled:opacity-50 disabled:cursor-not-allowed transition border border-white/10"
+            >
+              Next
+            </button>
           </div>
         )}
       </main>
@@ -217,10 +268,21 @@ export default function Sertifikasi() {
               </div>
 
               <div>
+                <label className="block text-sm font-medium text-slate-400 mb-1">Category</label>
+                <input
+                  name="kategori"
+                  value={form.kategori}
+                  onChange={handleChange}
+                  className="w-full bg-[#0f172a] text-white border border-white/10 rounded-lg px-4 py-2.5 focus:border-blue-500 focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div>
                 <label className="block text-sm font-medium text-slate-400 mb-1">Image URL</label>
                 <input
-                  name="image"
-                  value={form.image}
+                  name="image_url"
+                  value={form.image_url}
                   onChange={handleChange}
                   className="w-full bg-[#0f172a] text-white border border-white/10 rounded-lg px-4 py-2.5 focus:border-blue-500 focus:outline-none"
                   required
@@ -230,8 +292,8 @@ export default function Sertifikasi() {
               <div>
                 <label className="block text-sm font-medium text-slate-400 mb-1">Credential Link</label>
                 <input
-                  name="link"
-                  value={form.link}
+                  name="certificate_link"
+                  value={form.certificate_link}
                   onChange={handleChange}
                   className="w-full bg-[#0f172a] text-white border border-white/10 rounded-lg px-4 py-2.5 focus:border-blue-500 focus:outline-none"
                   required
