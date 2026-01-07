@@ -69,7 +69,7 @@ export default function Projects({ lang }) {
         className="w-full md:max-w-6xl"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.1 }}
         variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
       >
         <motion.h2

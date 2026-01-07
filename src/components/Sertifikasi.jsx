@@ -55,7 +55,7 @@ export default function Sertifikasi({ lang }) {
         className="w-full md:max-w-4xl"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.1 }}
         variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
       >
         {/* Header with Typewriter */}
